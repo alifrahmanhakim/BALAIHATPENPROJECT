@@ -1,0 +1,77 @@
+rules_version = '2';
+
+// Aturan keamanan Firestore. Tinjau sebelum dipakai dengan data pasien sungguhan.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+    function roleOf() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+    function isStaff() {
+      return signedIn() && roleOf() in ['assessor', 'admin'];
+    }
+    function isAdmin() {
+      return signedIn() && roleOf() == 'admin';
+    }
+
+    // Data publik (dibaca siapa saja, diubah admin)
+    match /services/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /doctors/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /config/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Kuota per tanggal: n = kapasitas, used = terpakai.
+    // Pasien hanya boleh menaikkan used satu per satu dan selama belum penuh.
+    match /quota/{date} {
+      allow read: if true;
+      allow create: if isAdmin() || (signedIn()
+        && request.resource.data.keys().hasOnly(['n', 'used'])
+        && request.resource.data.used == 1
+        && request.resource.data.n == 12);
+      allow update: if isAdmin() || (signedIn()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['used'])
+        && request.resource.data.used == resource.data.used + 1
+        && resource.data.used < resource.data.n);
+      allow delete: if isAdmin();
+    }
+
+    // Profil pengguna
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create: if signedIn() && request.auth.uid == uid && request.resource.data.role == 'patient';
+      allow update: if isAdmin() || (signedIn()
+        && request.auth.uid == uid
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.active == resource.data.active);
+    }
+
+    // Pendaftaran / rekam pemeriksaan
+    match /patients/{id} {
+      allow read: if signedIn() && (resource.data.owner == request.auth.uid || isStaff());
+      allow create: if signedIn()
+        && request.resource.data.owner == request.auth.uid
+        && request.resource.data.status == 'Menunggu verifikasi';
+      allow update: if isStaff() || (signedIn()
+        && resource.data.owner == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['uploads', 'docs']));
+      allow delete: if isAdmin();
+    }
+
+    // Log aktivitas
+    match /logs/{id} {
+      allow read: if isStaff();
+      allow create: if signedIn();
+    }
+  }
+}

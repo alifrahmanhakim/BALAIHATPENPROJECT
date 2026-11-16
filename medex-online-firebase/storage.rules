@@ -1,0 +1,34 @@
+rules_version = '2';
+
+// Aturan keamanan Cloud Storage: foto dokumen dan gambar hasil pemeriksaan.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+    function roleOf() {
+      return firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role;
+    }
+    function okType() {
+      return request.resource.contentType.matches('image/.*') || request.resource.contentType == 'application/pdf';
+    }
+    function okSize() {
+      return request.resource.size < 10 * 1024 * 1024;
+    }
+
+    // Dokumen yang diunggah pasien di folder miliknya
+    match /uploads/{uid}/{allPaths=**} {
+      allow read: if signedIn() && (request.auth.uid == uid || roleOf() in ['assessor', 'admin']);
+      allow write: if signedIn() && request.auth.uid == uid && okType() && okSize();
+    }
+
+    // Gambar hasil pemeriksaan: ditulis staf, dibaca staf dan pemilik pendaftaran
+    match /patients/{pid}/{allPaths=**} {
+      allow read: if signedIn() && (
+        roleOf() in ['assessor', 'admin'] ||
+        firestore.get(/databases/(default)/documents/patients/$(pid)).data.owner == request.auth.uid);
+      allow write: if signedIn() && roleOf() in ['assessor', 'admin'] && okType() && okSize();
+    }
+  }
+}

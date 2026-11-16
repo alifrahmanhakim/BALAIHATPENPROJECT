@@ -1,0 +1,937 @@
+<title>Langit Sehat Medex</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: airport-signage clarity. Wide airy bands, a licence-card hero, mono "flight-strip" data, one orange accent for actions. */
+:root{
+  --bg:#F4F7FB; --surface:#FFFFFF; --ink:#0B1F3A; --muted:#55657C; --line:#D9E2EE;
+  --sky:#2C86CF; --sky-soft:#E4F0FB; --amber:#EE661A; --amber-ink:#FFFFFF;
+  --ok:#17905F; --ok-soft:#E1F4EB; --warn:#B87A06; --warn-soft:#FBF0D9; --bad:#C93B30; --bad-soft:#FBE4E1;
+  --shadow:0 1px 2px rgba(11,31,58,.06),0 12px 32px -12px rgba(11,31,58,.18);
+  --f-display:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#06111F; --surface:#0C1B30; --ink:#E7EEF8; --muted:#93A3BA; --line:#1C2F4B;
+  --sky:#5BB0EC; --sky-soft:#10294A; --amber:#FF8640; --amber-ink:#1A0B02;
+  --ok:#3CC48D; --ok-soft:#0E3127; --warn:#E5AC3A; --warn-soft:#33270B; --bad:#F06B5F; --bad-soft:#3A1614;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 16px 40px -16px rgba(0,0,0,.7); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#06111F; --surface:#0C1B30; --ink:#E7EEF8; --muted:#93A3BA; --line:#1C2F4B;
+  --sky:#5BB0EC; --sky-soft:#10294A; --amber:#FF8640; --amber-ink:#1A0B02;
+  --ok:#3CC48D; --ok-soft:#0E3127; --warn:#E5AC3A; --warn-soft:#33270B; --bad:#F06B5F; --bad-soft:#3A1614;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 16px 40px -16px rgba(0,0,0,.7); color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--surface)}
+h1,h2,h3{font-family:var(--f-display);line-height:1.05;margin:0;text-wrap:balance;letter-spacing:-.005em}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--sky);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--sky)}
+.muted{color:var(--muted)}
+section{padding-block:96px}
+.sec-head{display:grid;gap:14px;max-width:680px;margin-bottom:44px}
+.sec-head h2{font-size:clamp(34px,5vw,52px);font-weight:600}
+.sec-head h2::after{content:"";display:block;height:3px;width:0;background:var(--amber);margin-top:16px;border-radius:2px;transition:width .9s cubic-bezier(.2,.8,.2,1) .15s}
+.sec-head.in h2::after{width:56px}
+.sec-head p{color:var(--muted);max-width:60ch}
+
+/* buttons */
+.btn{--h:48px;display:inline-flex;align-items:center;gap:10px;height:var(--h);padding:0 22px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 15px/1 var(--f-body);text-decoration:none;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;position:relative;overflow:hidden;white-space:nowrap}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--sky)}
+.btn-primary{background:var(--amber);color:var(--amber-ink);border-color:transparent}
+.btn-primary:hover{border-color:transparent}
+.btn-primary::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-120%);animation:shine 3.6s ease-in-out infinite}
+@keyframes shine{0%,55%{transform:translateX(-120%)}85%,100%{transform:translateX(120%)}}
+.btn svg{width:18px;height:18px}
+.btn-sm{--h:38px;padding:0 16px;font-size:14px}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;transition:background .3s,box-shadow .3s,border-color .3s;border-bottom:1px solid transparent}
+.nav.scrolled{background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:68px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:21px;letter-spacing:.01em}
+.brand-mark{width:34px;height:34px;border-radius:10px;background:var(--ink);display:grid;place-items:center}
+.brand-mark svg{width:20px;height:20px;color:var(--bg)}
+.brand small{display:block;font-family:var(--f-mono);font-weight:400;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.menu{display:flex;gap:4px;list-style:none;margin:0;padding:0}
+.menu a{display:block;padding:8px 12px;border-radius:999px;text-decoration:none;font-size:14px;font-weight:500;color:var(--muted);transition:color .2s,background .2s}
+.menu a:hover{color:var(--ink);background:var(--sky-soft)}
+.nav-cta{display:flex;align-items:center;gap:8px}
+.burger{display:none;width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.burger span{display:block;width:18px;height:2px;background:currentColor;margin:4px auto;transition:transform .3s,opacity .3s}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media (max-width:960px){
+  .burger{display:block}
+  .menu{position:absolute;top:68px;left:0;right:0;flex-direction:column;background:var(--surface);border-bottom:1px solid var(--line);padding:8px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px));box-shadow:var(--shadow)}
+  .menu:not(.open){display:none}
+  .menu a{padding:12px}
+  .nav-cta .btn{display:none}
+}
+
+/* hero */
+.hero{position:relative;padding-block:56px 72px;overflow:hidden}
+.sky-layer{position:absolute;inset:0;pointer-events:none}
+.cloud{position:absolute;border-radius:50%;filter:blur(40px);opacity:.55;background:var(--sky-soft)}
+.cloud.c1{width:520px;height:220px;top:-40px;right:-120px}
+.cloud.c2{width:420px;height:180px;bottom:-60px;left:-140px}
+.flightpath{position:absolute;inset:0;width:100%;height:100%}
+.flightpath .route{fill:none;stroke:var(--sky);stroke-width:1.5;stroke-dasharray:2 9;stroke-linecap:round;opacity:.55}
+.flightpath .plane{fill:var(--ink)}
+.hero-grid{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+.hero-copy{display:grid;gap:22px;min-width:0}
+.hero h1{font-size:clamp(52px,9vw,104px);font-weight:700;line-height:.92;text-transform:uppercase}
+.hero h1 .w{display:inline-block;animation:wordIn .8s cubic-bezier(.2,.8,.2,1) both}
+.hero h1 .w.accent{color:var(--sky)}
+@keyframes wordIn{from{opacity:0;transform:translateY(40%) rotate(2deg)}to{opacity:1;transform:none}}
+.hero .lead{font-size:clamp(17px,2vw,19px);color:var(--muted);max-width:52ch;animation:fadeUp .8s .5s both}
+.hero .actions{display:flex;flex-wrap:wrap;gap:12px;animation:fadeUp .8s .65s both}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:var(--f-mono);font-size:12.5px;color:var(--muted);animation:fadeUp .8s .8s both}
+.hero .meta span{display:inline-flex;align-items:center;gap:8px}
+.hero .meta i{width:6px;height:6px;border-radius:50%;background:var(--ok);display:inline-block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* licence card */
+.cert{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;animation:certIn 1s .3s cubic-bezier(.2,.8,.2,1) both;min-width:0}
+@keyframes certIn{from{opacity:0;transform:translateY(30px) rotate(2.5deg)}to{opacity:1;transform:rotate(-1.2deg)}}
+.cert:hover{transform:rotate(0)}
+.cert-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 22px;background:var(--ink);color:var(--bg)}
+.cert-top b{font-family:var(--f-display);font-size:20px;letter-spacing:.06em;text-transform:uppercase}
+.cert-top span{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;opacity:.75}
+.cert-body{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;padding:22px}
+.field{display:grid;gap:2px;min-width:0}
+.field dt{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.field dd{margin:0;font-family:var(--f-mono);font-size:14.5px;font-weight:500;overflow-wrap:anywhere}
+.field.full{grid-column:1/-1}
+.stamp{position:absolute;right:22px;top:84px;font-family:var(--f-display);font-weight:700;font-size:30px;letter-spacing:.12em;color:var(--ok);border:3px solid var(--ok);border-radius:10px;padding:2px 14px;transform:rotate(-12deg) scale(1);opacity:.9;animation:stamp .5s 1.4s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes stamp{from{opacity:0;transform:rotate(-12deg) scale(2.2)}to{opacity:.9;transform:rotate(-12deg) scale(1)}}
+.ecg-box{border-top:1px dashed var(--line);padding:14px 22px 18px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px}
+.ecg{width:100%;height:56px;display:block}
+.ecg .grid{stroke:var(--line);stroke-width:1}
+.ecg .trace{fill:none;stroke:var(--bad);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:1000 1000;animation:trace 3.2s linear infinite}
+@keyframes trace{from{stroke-dashoffset:1000}to{stroke-dashoffset:-1000}}
+.bpm{font-family:var(--f-mono);text-align:right;line-height:1.1}
+.bpm b{display:block;font-size:26px;color:var(--bad);font-weight:500}
+.bpm small{font-size:10.5px;letter-spacing:.14em;color:var(--muted)}
+.heart{display:inline-block;animation:beat 1.6s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}12%{transform:scale(1.25)}24%{transform:scale(1)}}
+
+/* facts strip */
+.facts{border-block:1px solid var(--line);background:var(--surface);padding-block:28px}
+.facts .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.fact{display:grid;gap:4px}
+.fact b{font-family:var(--f-display);font-size:44px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+.fact span{font-size:14px;color:var(--muted)}
+
+/* classes */
+.classes{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.cls{all:unset;box-sizing:border-box;cursor:pointer;display:grid;gap:16px;align-content:start;padding:26px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line);transition:transform .3s,box-shadow .3s,border-color .3s}
+.cls:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.cls[aria-pressed="true"]{border-color:var(--sky);box-shadow:0 0 0 3px var(--sky-soft)}
+.cls-num{display:flex;align-items:baseline;justify-content:space-between}
+.cls-num b{font-family:var(--f-display);font-size:64px;font-weight:700;line-height:.8;color:var(--sky)}
+.cls-num span{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.cls h3{font-size:24px;font-weight:600}
+.cls ul{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:14.5px}
+.cls li{display:flex;gap:10px}
+.cls li::before{content:"";flex:none;width:6px;height:6px;margin-top:9px;border-radius:50%;background:var(--amber)}
+.validity{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-family:var(--f-mono);font-size:12px;text-align:center}
+.validity div{padding:8px 4px;display:grid;gap:2px}
+.validity div+div{border-left:1px solid var(--line)}
+.validity small{color:var(--muted);font-size:10.5px}
+.validity b{font-weight:500;font-size:14px}
+
+.calc{margin-top:22px;display:grid;grid-template-columns:1.2fr 1fr;gap:0;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:var(--surface)}
+.calc-in{padding:28px;display:grid;gap:18px;align-content:start}
+.calc-in h3{font-size:26px;font-weight:600}
+.calc-out{padding:28px;background:var(--ink);color:var(--bg);display:grid;gap:10px;align-content:center}
+.calc-out .big{font-family:var(--f-display);font-size:72px;font-weight:700;line-height:.9}
+.calc-out .big small{font-size:24px;font-weight:500;margin-left:6px}
+.calc-out p{opacity:.8;font-size:14px}
+.calc-out .until{font-family:var(--f-mono);font-size:15px;opacity:1}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--bg);border:1px solid var(--line);gap:4px;flex-wrap:wrap}
+.seg button{all:unset;cursor:pointer;padding:8px 16px;border-radius:999px;font-weight:600;font-size:14px;color:var(--muted);transition:background .25s,color .25s}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg button:focus-visible{outline:2px solid var(--sky)}
+.row{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:end}
+label.lbl{display:grid;gap:6px;font-size:13px;font-weight:600;color:var(--muted)}
+input[type=text],input[type=number],input[type=date],input[type=email],input[type=tel],select{font:500 15px var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;height:46px;padding:0 14px;width:100%;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus{outline:none;border-color:var(--sky);box-shadow:0 0 0 3px var(--sky-soft)}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;cursor:pointer}
+.check input{width:18px;height:18px;margin-top:3px;accent-color:var(--sky);flex:none}
+
+/* exams */
+.exams{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.exam{display:grid;gap:12px;align-content:start;padding:22px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line);transition:transform .3s,box-shadow .3s;min-width:0}
+.exam:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--sky-soft);color:var(--sky);transition:transform .5s cubic-bezier(.3,1.5,.5,1)}
+.exam:hover .ico{transform:rotate(-10deg) scale(1.08)}
+.ico svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.exam h3{font-family:var(--f-body);font-size:16px;font-weight:600;line-height:1.3}
+.exam p{font-size:13.5px;color:var(--muted);line-height:1.5}
+.tag{justify-self:start;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--bg);border:1px solid var(--line);color:var(--muted)}
+.tag.init{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 40%,transparent)}
+
+/* flow */
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,1fr);gap:0;position:relative;counter-reset:s}
+.flow::before{content:"";position:absolute;left:4%;right:4%;top:23px;height:2px;background:var(--line)}
+.flow .bar{position:absolute;left:4%;top:23px;height:2px;background:var(--sky);width:0;transition:width 2s cubic-bezier(.4,0,.2,1)}
+.flow.in .bar{width:92%}
+.flow li{position:relative;display:grid;gap:10px;justify-items:center;text-align:center;padding:0 8px}
+.flow .dot{width:48px;height:48px;border-radius:50%;background:var(--surface);border:2px solid var(--line);display:grid;place-items:center;font-family:var(--f-mono);font-weight:500;transition:border-color .4s,background .4s,color .4s;z-index:1}
+.flow.in .dot{border-color:var(--sky);color:var(--sky)}
+.flow li:nth-child(2) .dot{transition-delay:.1s}.flow li:nth-child(3) .dot{transition-delay:.45s}.flow li:nth-child(4) .dot{transition-delay:.8s}.flow li:nth-child(5) .dot{transition-delay:1.15s}.flow li:nth-child(6) .dot{transition-delay:1.5s}.flow li:nth-child(7) .dot{transition-delay:1.85s}
+.flow li:last-child .dot{background:var(--sky);color:var(--bg)}
+.flow h3{font-family:var(--f-body);font-size:15px;font-weight:600;line-height:1.3}
+.flow p{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* prep */
+.prep-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.checklist{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.checklist label{display:flex;gap:14px;align-items:center;padding:14px 18px;border-radius:12px;background:var(--surface);border:1px solid var(--line);cursor:pointer;transition:border-color .2s,background .2s}
+.checklist input{position:absolute;opacity:0;pointer-events:none}
+.box{flex:none;width:24px;height:24px;border-radius:7px;border:2px solid var(--line);display:grid;place-items:center;transition:background .25s,border-color .25s}
+.box svg{width:14px;height:14px;stroke:var(--bg);stroke-width:3;fill:none;stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset .35s .05s}
+.checklist input:checked + .box{background:var(--ok);border-color:var(--ok)}
+.checklist input:checked + .box svg{stroke-dashoffset:0}
+.checklist input:checked ~ span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--muted)}
+.checklist input:focus-visible + .box{outline:2px solid var(--sky);outline-offset:2px}
+.prep-side{display:grid;gap:18px;position:sticky;top:96px}
+.meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--ok);border-radius:99px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.note{padding:18px 20px;border-radius:12px;background:var(--warn-soft);color:var(--ink);font-size:14.5px;display:grid;gap:6px}
+.note b{color:var(--warn);font-family:var(--f-mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase}
+
+/* register */
+.reg{display:grid;grid-template-columns:280px 1fr;border-radius:20px;overflow:hidden;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow)}
+.reg-side{background:var(--ink);color:var(--bg);padding:30px 26px;display:grid;gap:26px;align-content:start}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.steps li{display:flex;gap:12px;align-items:center;padding:8px 0;opacity:.5;transition:opacity .3s}
+.steps li.on,.steps li.done{opacity:1}
+.steps .n{width:28px;height:28px;border-radius:50%;border:1.5px solid currentColor;display:grid;place-items:center;font-family:var(--f-mono);font-size:12px;flex:none;transition:background .3s,color .3s}
+.steps li.on .n{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}
+.steps li.done .n{background:var(--bg);color:var(--ink);border-color:var(--bg)}
+.progress{height:4px;border-radius:9px;background:color-mix(in srgb,var(--bg) 20%,transparent);overflow:hidden}
+.progress i{display:block;height:100%;width:20%;background:var(--amber);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.reg-main{padding:32px;min-width:0}
+.reg-main fieldset{border:0;margin:0;padding:0;display:grid;gap:18px;animation:stepIn .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes stepIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+.reg-main legend{font-family:var(--f-display);font-size:30px;font-weight:600;padding:0;margin-bottom:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.err{color:var(--bad);font-size:12.5px;font-weight:500;min-height:0}
+.invalid{border-color:var(--bad)!important}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0}
+.opt span{display:grid;gap:2px;padding:14px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);cursor:pointer;transition:border-color .2s,background .2s,transform .2s;font-weight:600;font-size:14.5px}
+.opt small{font-weight:400;color:var(--muted);font-size:12.5px}
+.opt input:checked + span{border-color:var(--sky);background:var(--sky-soft)}
+.opt input:focus-visible + span{outline:2px solid var(--sky);outline-offset:2px}
+.opt span:hover{transform:translateY(-2px)}
+.rec{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;color:var(--amber);text-transform:uppercase}
+.dates{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.dates .opt span{text-align:center;padding:10px 6px;font-family:var(--f-mono);font-weight:500}
+.dates .opt b{font-family:var(--f-display);font-size:26px;line-height:1}
+.reg-nav{display:flex;justify-content:space-between;gap:12px;margin-top:28px;flex-wrap:wrap}
+.summary{display:grid;grid-template-columns:auto 1fr;gap:8px 20px;margin:0;padding:18px 20px;border-radius:12px;background:var(--bg);border:1px solid var(--line);font-size:14.5px}
+.summary dt{color:var(--muted)}
+.summary dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.success{display:grid;gap:16px;justify-items:center;text-align:center;padding:30px 10px}
+.success svg{width:96px;height:96px}
+.success .ring{fill:none;stroke:var(--ok);stroke-width:4;stroke-dasharray:290;stroke-dashoffset:290;animation:draw .7s ease-out forwards}
+.success .tick{fill:none;stroke:var(--ok);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:70;stroke-dashoffset:70;animation:draw .45s .6s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.regno{font-family:var(--f-mono);font-size:24px;font-weight:500;padding:10px 18px;border-radius:10px;background:var(--sky-soft);color:var(--sky);letter-spacing:.06em}
+.demo-note{font-size:12.5px;color:var(--muted)}
+
+/* status */
+.status-wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:28px;align-items:start}
+.status-form{display:grid;gap:14px;padding:28px;border-radius:18px;background:var(--surface);border:1px solid var(--line)}
+.status-form .row{flex-wrap:nowrap}
+.status-form .row input{flex:1;font-family:var(--f-mono);text-transform:uppercase}
+.samples{display:flex;flex-wrap:wrap;gap:8px}
+.chip{all:unset;cursor:pointer;font-family:var(--f-mono);font-size:12px;padding:6px 10px;border-radius:8px;border:1px dashed var(--line);color:var(--muted);transition:border-color .2s,color .2s}
+.chip:hover,.chip:focus-visible{border-color:var(--sky);color:var(--sky)}
+.result{padding:28px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:grid;gap:18px;animation:fadeUp .5s both;min-width:0}
+.result-head{display:flex;justify-content:space-between;align-items:start;gap:12px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px}
+.badge i{width:8px;height:8px;border-radius:50%;background:currentColor;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.b-ok{background:var(--ok-soft);color:var(--ok)}
+.b-warn{background:var(--warn-soft);color:var(--warn)}
+.b-bad{background:var(--bad-soft);color:var(--bad)}
+.b-info{background:var(--sky-soft);color:var(--sky)}
+.track{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.track li{display:grid;grid-template-columns:22px 1fr;gap:12px;padding-bottom:14px;position:relative;font-size:14.5px}
+.track li::before{content:"";position:absolute;left:10px;top:20px;bottom:0;width:2px;background:var(--line)}
+.track li:last-child::before{display:none}
+.track .d{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);background:var(--surface);z-index:1}
+.track li.done .d{background:var(--ok);border-color:var(--ok)}
+.track li.now .d{border-color:var(--sky);box-shadow:0 0 0 4px var(--sky-soft);animation:pulse 1.6s infinite}
+.track small{display:block;color:var(--muted);font-family:var(--f-mono);font-size:12px}
+.empty{padding:28px;border-radius:18px;border:1.5px dashed var(--line);color:var(--muted);display:grid;gap:8px;place-content:center;text-align:center;min-height:240px}
+
+/* faq */
+.faq{display:grid;gap:10px;max-width:820px}
+.qa{border-radius:14px;background:var(--surface);border:1px solid var(--line);overflow:hidden}
+.qa button{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;justify-content:space-between;gap:16px;align-items:center;padding:18px 22px;font-weight:600;font-size:16px}
+.qa button:focus-visible{outline:2px solid var(--sky);outline-offset:-2px}
+.qa .pm{flex:none;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);position:relative;transition:transform .35s,background .35s}
+.qa .pm::before,.qa .pm::after{content:"";position:absolute;left:50%;top:50%;width:10px;height:1.6px;background:var(--ink);transform:translate(-50%,-50%)}
+.qa .pm::after{transform:translate(-50%,-50%) rotate(90deg);transition:transform .35s}
+.qa.open .pm{transform:rotate(180deg);background:var(--sky-soft)}
+.qa.open .pm::after{transform:translate(-50%,-50%) rotate(0)}
+.qa .ans{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.2,.8,.2,1)}
+.qa.open .ans{grid-template-rows:1fr}
+.qa .ans>div{overflow:hidden}
+.qa .ans p{padding:0 22px 20px;color:var(--muted);max-width:68ch}
+
+/* contact + footer */
+.contact{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.ccard{padding:24px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line);display:grid;gap:8px;align-content:start}
+.ccard .eyebrow{color:var(--muted)}
+.ccard b{font-size:17px}
+.copy{all:unset;cursor:pointer;justify-self:start;font-size:12.5px;font-weight:600;color:var(--sky)}
+footer{border-top:1px solid var(--line);padding-block:36px 48px;font-size:13.5px;color:var(--muted)}
+footer .wrap{display:grid;gap:14px}
+footer .top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.disclaimer{padding:14px 16px;border-radius:10px;background:var(--surface);border:1px solid var(--line);max-width:90ch}
+
+/* reveal: content stays readable; it only glides into place */
+.rv{transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.rv.pre{transform:translateY(28px)}
+
+@media (max-width:1060px){
+  .exams{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:900px){
+  section{padding-block:72px}
+  .hero-grid,.prep-grid,.status-wrap,.calc{grid-template-columns:1fr}
+  .classes,.contact{grid-template-columns:1fr}
+  .facts .wrap{grid-template-columns:repeat(2,1fr)}
+  .flow{grid-template-columns:1fr;gap:18px}
+  .flow::before,.flow .bar{left:23px;right:auto;top:0;bottom:0;width:2px;height:auto}
+  .flow .bar{height:0;bottom:auto;transition:height 2s cubic-bezier(.4,0,.2,1)}
+  .flow.in .bar{width:2px;height:100%}
+  .flow li{grid-template-columns:48px 1fr;justify-items:start;text-align:left;gap:4px 16px;padding:0}
+  .flow li .dot{grid-row:span 2}
+  .reg{grid-template-columns:1fr}
+  .reg-side{padding:22px}
+  .steps{grid-template-columns:repeat(5,auto);justify-content:space-between}
+  .steps li span:not(.n){display:none}
+  .prep-side{position:static}
+  .cert{animation-name:certInFlat}
+}
+@keyframes certInFlat{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+@media (max-width:560px){
+  .grid2{grid-template-columns:1fr}
+  .dates{grid-template-columns:repeat(3,1fr)}
+  .reg-main,.calc-in,.calc-out,.status-form,.result{padding:22px}
+  .cert-body{grid-template-columns:1fr 1fr}
+  .stamp{font-size:22px;top:78px;right:14px}
+  .exams{grid-template-columns:1fr}
+  .status-form .row{flex-wrap:wrap}
+  .status-form .row .btn{width:100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+  .rv.pre{transform:none}
+}
+</style>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Langit Sehat, kembali ke atas">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13h4l2-5 3 10 3-8 2 3h6"/></svg></span>
+      <span>Langit Sehat<small>Aviation Medical Center</small></span>
+    </a>
+    <ul class="menu" id="menu">
+      <li><a href="#kelas">Sertifikat</a></li>
+      <li><a href="#pemeriksaan">Pemeriksaan</a></li>
+      <li><a href="#alur">Alur</a></li>
+      <li><a href="#persiapan">Persiapan</a></li>
+      <li><a href="#status">Cek Status</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#kontak">Kontak</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="btn btn-primary btn-sm" href="#daftar">Daftar Medex</a>
+      <button class="burger" id="burger" aria-label="Buka menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="sky-layer" aria-hidden="true">
+      <div class="cloud c1" data-par="0.18"></div>
+      <div class="cloud c2" data-par="-0.12"></div>
+      <svg class="flightpath" id="flightpath" viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid slice">
+        <path id="route" class="route" d="M-60 430 C 220 430, 330 170, 600 210 S 980 70, 1270 110"/>
+        <g class="plane">
+          <path d="M16 0 L4 -2.5 L-2 -14 L-6 -14 L-3 -2.5 L-12 -2 L-15 -7 L-18 -7 L-16 0 L-18 7 L-15 7 L-12 2 L-3 2.5 L-6 14 L-2 14 L4 2.5 Z"/>
+          <animateMotion dur="11s" repeatCount="indefinite" rotate="auto" keyPoints="0;1" keyTimes="0;1" calcMode="spline" keySplines=".45 0 .55 1"><mpath href="#route"/></animateMotion>
+        </g>
+      </svg>
+    </div>
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow" style="animation:fadeUp .6s both">Medical Examination · CASR Part 67</span>
+        <h1 aria-label="Fit to fly. Sehat untuk terbang.">
+          <span class="w" style="animation-delay:.05s">Fit</span> <span class="w" style="animation-delay:.13s">to</span> <span class="w accent" style="animation-delay:.21s">fly.</span>
+        </h1>
+        <p class="lead">Pemeriksaan kesehatan penerbangan untuk pilot, awak kabin, dan pemandu lalu lintas udara. Daftar online, periksa dalam satu hari, lalu pantau status sertifikat Anda dari sini.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#daftar">Daftar Pemeriksaan
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn" href="#status">Cek Status Sertifikat</a>
+        </div>
+        <div class="meta">
+          <span><i></i>Class 1 · 2 · 3</span>
+          <span>Initial · Renewal · Special</span>
+          <span>Senin–Jumat 07.30</span>
+        </div>
+      </div>
+
+      <article class="cert" aria-label="Contoh sertifikat kesehatan Class 1">
+        <div class="cert-top"><b>Medical Certificate</b><span>CLASS 1 · CONTOH</span></div>
+        <dl class="cert-body">
+          <div class="field full"><dt>Holder</dt><dd>CAPT. R. PRATAMA</dd></div>
+          <div class="field"><dt>Licence</dt><dd>ATPL · 7731</dd></div>
+          <div class="field"><dt>Exam type</dt><dd>RENEWAL</dd></div>
+          <div class="field"><dt>Examined</dt><dd id="certIssued">—</dd></div>
+          <div class="field"><dt>Valid until</dt><dd id="certValid">—</dd></div>
+          <div class="field full"><dt>Limitations</dt><dd>NIL</dd></div>
+        </dl>
+        <div class="stamp" aria-hidden="true">FIT</div>
+        <div class="ecg-box">
+          <svg class="ecg" viewBox="0 0 600 64" preserveAspectRatio="none" aria-hidden="true">
+            <g class="grid" id="ecgGrid"></g>
+            <path class="trace" id="ecgPath" pathLength="1000" d=""/>
+          </svg>
+          <div class="bpm"><b><span class="heart">♥</span> <span id="bpm">72</span></b><small>BPM · ECG</small></div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- FACTS -->
+  <div class="facts">
+    <div class="wrap">
+      <div class="fact rv"><b data-count="3">3</b><span>kelas sertifikat medis</span></div>
+      <div class="fact rv"><b data-count="10">10</b><span>bidang pemeriksaan</span></div>
+      <div class="fact rv"><b data-count="6">6</b><span>tahap dari daftar sampai sertifikat</span></div>
+      <div class="fact rv"><b><span data-count="1">1</span> hari</b><span>pemeriksaan rutin selesai</span></div>
+    </div>
+  </div>
+
+  <!-- CLASSES -->
+  <section id="kelas">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">Sertifikat Medis</span>
+        <h2>Satu kelas untuk setiap peran di udara</h2>
+        <p>Kelas sertifikat mengikuti jenis lisensi Anda. Masa berlaku makin pendek seiring usia. Pilih kartu untuk menghitung masa berlaku Anda.</p>
+      </div>
+
+      <div class="classes">
+        <button class="cls rv" data-class="1" aria-pressed="true">
+          <div class="cls-num"><b>1</b><span>Class</span></div>
+          <h3>Pilot komersial</h3>
+          <ul><li>ATPL, CPL, MPL</li><li>Flight engineer & flight navigator</li><li>Calon siswa pilot komersial (initial)</li></ul>
+          <div class="validity"><div><small>&lt;40</small><b>12 bln</b></div><div><small>40–59</small><b>12/6*</b></div><div><small>60+</small><b>6 bln</b></div></div>
+        </button>
+        <button class="cls rv" data-class="2" aria-pressed="false">
+          <div class="cls-num"><b>2</b><span>Class</span></div>
+          <h3>Pilot privat & awak kabin</h3>
+          <ul><li>PPL dan siswa pilot</li><li>Pilot glider & balon udara</li><li>Pramugari / pramugara</li></ul>
+          <div class="validity"><div><small>&lt;40</small><b>60 bln</b></div><div><small>40–49</small><b>24 bln</b></div><div><small>50+</small><b>12 bln</b></div></div>
+        </button>
+        <button class="cls rv" data-class="3" aria-pressed="false">
+          <div class="cls-num"><b>3</b><span>Class</span></div>
+          <h3>Pemandu lalu lintas udara</h3>
+          <ul><li>Air Traffic Controller (ATC)</li><li>Personel operasi lain sesuai ketentuan</li><li>Calon siswa ATC (initial)</li></ul>
+          <div class="validity"><div><small>&lt;40</small><b>48 bln</b></div><div><small>40–49</small><b>24 bln</b></div><div><small>50+</small><b>12 bln</b></div></div>
+        </button>
+      </div>
+
+      <div class="calc rv" id="calc">
+        <div class="calc-in">
+          <span class="eyebrow">Kalkulator masa berlaku</span>
+          <h3>Kapan saya harus medex lagi?</h3>
+          <div class="seg" role="group" aria-label="Kelas sertifikat">
+            <button data-c="1" aria-pressed="true">Class 1</button>
+            <button data-c="2" aria-pressed="false">Class 2</button>
+            <button data-c="3" aria-pressed="false">Class 3</button>
+          </div>
+          <div class="row">
+            <label class="lbl" for="age" style="width:120px">Usia
+              <input id="age" type="number" min="16" max="80" value="34"></label>
+            <label class="lbl" for="examDate" style="flex:1;min-width:170px">Tanggal pemeriksaan
+              <input id="examDate" type="date"></label>
+          </div>
+          <label class="check" id="spWrap"><input type="checkbox" id="singlePilot"> Operasi single-pilot angkutan penumpang komersial</label>
+        </div>
+        <div class="calc-out" aria-live="polite">
+          <span class="eyebrow" style="color:inherit;opacity:.7">Masa berlaku</span>
+          <div class="big"><span id="vMonths">12</span><small>bulan</small></div>
+          <p class="until">Berlaku sampai <b id="vUntil">—</b></p>
+          <p id="vRule">Class 1, usia di bawah 40 tahun.</p>
+          <p style="font-size:12.5px;opacity:.6">*Acuan ICAO Annex 1. CASR Part 67 dan kebijakan operator bisa lebih ketat.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXAMS -->
+  <section id="pemeriksaan" style="background:var(--surface);border-block:1px solid var(--line)">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">Komponen Pemeriksaan</span>
+        <h2>Apa saja yang diperiksa</h2>
+        <p>Sepuluh bidang, dikerjakan berurutan dalam satu kunjungan. Pemeriksaan bertanda <span class="tag init" style="display:inline">Initial</span> umumnya hanya dilakukan pada pemeriksaan pertama.</p>
+      </div>
+      <div class="exams">
+        <article class="exam rv"><span class="ico"><svg viewBox="0 0 24 24"><path d="M5 3v6a5 5 0 0 0 10 0V3"/><path d="M10 14v2a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="12" r="2"/></svg></span><h3>Fisik umum</h3><p>Anamnesis, tekanan darah, nadi, tinggi, berat, BMI, pemeriksaan menyeluruh.</p><span class="tag">Semua kelas</span></article>
+        <article class="exam rv"><span class="ico"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></span><h3>Mata</h3><p>Visus jauh, menengah, dekat. Buta warna (Ishihara), lapang pandang, phoria, tekanan bola mata.</p><span class="tag">Semua kelas</span></article>
+        <article class="exam rv"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0"/><path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4"/></svg></span><h3>THT & audiometri</h3><p>Tes pendengaran, timpanometri, hidung dan sinus, keseimbangan (vestibular).</p><span class="tag">Semua kelas</span></article>
+        <article class="exam rv"><span class="ico"><svg viewBox="0 0 24 24"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z"/><path d="M3.2 12h6.3l.5-1 2 4.5 2-7 1.5 3.5h5.3"/></svg></span><h3>Jantung</h3><p>EKG istirahat. Treadmill untuk usia sekitar 40+ atau bila ada indikasi.</p><span class="tag">Semua kelas</span></article>
+        <article class="exam rv"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M12 7v10M8 10h8M8 14h8"/></svg></span><h3>Paru & rontgen</h3><p>Rontgen thorax dan spirometri untuk menilai fungsi paru.</p><span class="tag">Semua kelas</span></article>
+        <article class="exam rv"><span class="ico"><svg viewBox="0 0 24 24"><path d="M9 3h6"/><path d="M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2h12.4a1.5 1.5 0 0 0 1.3-2L14 9V3"/><path d="M7 15h10"/></svg></span><h3>Laboratorium</h3><p>Darah dan urin rutin, gula darah, lipid, fungsi hati dan ginjal, asam urat.</p><span class="tag">Semua kelas</span></article>
+        <article class="exam rv"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span><h3>NAPZA & alkohol</h3><p>Tes urin untuk amfetamin, THC, opiat, dan zat lain. Skrining alkohol.</p><span class="tag">Semua kelas</span></article>
+        <article class="exam rv"><span class="ico"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><h3>Neurologi & EEG</h3><p>Pemeriksaan saraf. Rekam gelombang otak (EEG) pada pemeriksaan pertama.</p><span class="tag init">EEG: Initial</span></article>
+        <article class="exam rv"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="m16 11 2 2 4-4"/></svg></span><h3>Psikologi</h3><p>Tes psikologi dan wawancara psikiatri untuk menilai kesiapan mental.</p><span class="tag init">Initial</span></article>
+        <article class="exam rv"><span class="ico"><svg viewBox="0 0 24 24"><path d="M7 3C4.5 3 3 5 3 7.5c0 3 1.5 4 2 7s1 6.5 2.5 6.5S9 17 10 15.5c.6-.9 1.4-.9 2 0 1 1.5 1 5.5 2.5 5.5s2-3.5 2.5-6.5 2-4 2-7C19 5 17.5 3 15 3c-1.5 0-2 1-3 1S8.5 3 7 3Z"/></svg></span><h3>Gigi & mulut</h3><p>Penting karena perubahan tekanan kabin bisa memicu nyeri gigi (barodontalgia).</p><span class="tag">Semua kelas</span></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLOW -->
+  <section id="alur">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">Alur Pemeriksaan</span>
+        <h2>Dari pendaftaran sampai sertifikat</h2>
+        <p>Enam tahap. Hasil pemeriksaan dinilai oleh dokter penguji penerbangan (AME) sebelum sertifikat terbit.</p>
+      </div>
+      <ol class="flow" id="flow">
+        <span class="bar" aria-hidden="true"></span>
+        <li><span class="dot">01</span><h3>Daftar online</h3><p>Isi data diri dan lisensi.</p></li>
+        <li><span class="dot">02</span><h3>Pilih jadwal</h3><p>Tanggal dan sesi pagi atau siang.</p></li>
+        <li><span class="dot">03</span><h3>Verifikasi dokumen</h3><p>Identitas, lisensi, sertifikat lama.</p></li>
+        <li><span class="dot">04</span><h3>Pemeriksaan</h3><p>Sepuluh bidang dalam satu hari.</p></li>
+        <li><span class="dot">05</span><h3>Evaluasi AME</h3><p>Dokter menilai seluruh hasil.</p></li>
+        <li><span class="dot">06</span><h3>Sertifikat terbit</h3><p>Status Fit, dengan atau tanpa limitasi.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- PREP -->
+  <section id="persiapan" style="background:var(--surface);border-block:1px solid var(--line)">
+    <div class="wrap prep-grid">
+      <div>
+        <div class="sec-head rv">
+          <span class="eyebrow">Persiapan</span>
+          <h2>Checklist sebelum datang</h2>
+          <p>Centang tiap poin saat sudah siap. Persiapan yang baik mencegah hasil laboratorium dan tekanan darah yang menyimpang.</p>
+        </div>
+        <ul class="checklist" id="checklist">
+          <li><label><input type="checkbox" id="p1"><span class="box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7"/></svg></span><span>Puasa 10–12 jam. Air putih boleh.</span></label></li>
+          <li><label><input type="checkbox" id="p2"><span class="box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7"/></svg></span><span>Tidur cukup, minimal 7 jam.</span></label></li>
+          <li><label><input type="checkbox" id="p3"><span class="box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7"/></svg></span><span>Tidak minum alkohol 24 jam sebelumnya.</span></label></li>
+          <li><label><input type="checkbox" id="p4"><span class="box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7"/></svg></span><span>Bawa KTP, lisensi, dan logbook.</span></label></li>
+          <li><label><input type="checkbox" id="p5"><span class="box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7"/></svg></span><span>Bawa sertifikat medis lama (untuk renewal).</span></label></li>
+          <li><label><input type="checkbox" id="p6"><span class="box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7"/></svg></span><span>Bawa kacamata atau lensa kontak yang biasa dipakai.</span></label></li>
+          <li><label><input type="checkbox" id="p7"><span class="box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7"/></svg></span><span>Bawa hasil pemeriksaan atau surat dokter bila punya riwayat penyakit.</span></label></li>
+        </ul>
+      </div>
+      <aside class="prep-side rv">
+        <div style="display:grid;gap:10px">
+          <div style="display:flex;justify-content:space-between;font-weight:600"><span>Kesiapan Anda</span><span class="mono" id="prepPct">0/7</span></div>
+          <div class="meter"><i id="prepBar"></i></div>
+        </div>
+        <div class="note"><b>Perlu diingat</b>Hindari kopi dan rokok pagi hari sebelum pemeriksaan. Keduanya bisa menaikkan tekanan darah dan nadi saat diukur.</div>
+        <div class="note" style="background:var(--sky-soft)"><b style="color:var(--sky)">Untuk wanita</b>Informasikan bila sedang hamil atau menstruasi. Rontgen dan tes urin bisa dijadwalkan ulang.</div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- REGISTER -->
+  <section id="daftar">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">Pendaftaran</span>
+        <h2>Daftar medex online</h2>
+        <p>Lima langkah, sekitar tiga menit. Nomor registrasi muncul di akhir dan dipakai untuk cek status.</p>
+      </div>
+      <div class="reg rv">
+        <div class="reg-side">
+          <div class="progress" aria-hidden="true"><i id="progBar"></i></div>
+          <ol class="steps" id="steps">
+            <li class="on"><span class="n">1</span><span>Data diri</span></li>
+            <li><span class="n">2</span><span>Lisensi</span></li>
+            <li><span class="n">3</span><span>Jenis medex</span></li>
+            <li><span class="n">4</span><span>Jadwal</span></li>
+            <li><span class="n">5</span><span>Konfirmasi</span></li>
+          </ol>
+          <button type="button" class="btn btn-sm" id="fillDemo" style="justify-self:start;background:transparent;color:inherit;border-color:color-mix(in srgb,var(--bg) 30%,transparent)">Isi data contoh</button>
+        </div>
+        <form class="reg-main" id="regForm" novalidate>
+          <fieldset data-step="1">
+            <legend>Data diri</legend>
+            <label class="lbl" for="fName">Nama lengkap sesuai lisensi<input id="fName" type="text" autocomplete="name" required placeholder="Rizky Pratama"><span class="err"></span></label>
+            <div class="grid2">
+              <label class="lbl" for="fDob">Tanggal lahir<input id="fDob" type="date" required><span class="err"></span></label>
+              <label class="lbl" for="fSex">Jenis kelamin<select id="fSex" required><option value="">Pilih</option><option>Laki-laki</option><option>Perempuan</option></select><span class="err"></span></label>
+              <label class="lbl" for="fEmail">Email<input id="fEmail" type="email" autocomplete="email" required placeholder="nama@maskapai.co.id"><span class="err"></span></label>
+              <label class="lbl" for="fPhone">No. HP / WhatsApp<input id="fPhone" type="tel" autocomplete="tel" required placeholder="0812 0000 0000"><span class="err"></span></label>
+            </div>
+          </fieldset>
+
+          <fieldset data-step="2" hidden>
+            <legend>Lisensi</legend>
+            <div class="lbl">Jenis personel</div>
+            <div class="opts" id="roleOpts">
+              <label class="opt"><input type="radio" name="role" id="r1" value="Pilot ATPL / CPL" data-cls="1"><span>Pilot ATPL / CPL<small>Penerbangan komersial</small></span></label>
+              <label class="opt"><input type="radio" name="role" id="r2" value="Pilot PPL / siswa" data-cls="2"><span>Pilot PPL / siswa<small>Privat & latihan</small></span></label>
+              <label class="opt"><input type="radio" name="role" id="r3" value="Awak kabin" data-cls="2"><span>Awak kabin<small>Pramugari / pramugara</small></span></label>
+              <label class="opt"><input type="radio" name="role" id="r4" value="ATC" data-cls="3"><span>ATC<small>Pemandu lalu lintas udara</small></span></label>
+            </div>
+            <span class="err" id="roleErr"></span>
+            <div class="grid2">
+              <label class="lbl" for="fLic">Nomor lisensi <span style="font-weight:400">(kosongkan bila initial)</span><input id="fLic" type="text" placeholder="7731"></label>
+              <label class="lbl" for="fOrg">Maskapai / instansi<input id="fOrg" type="text" required placeholder="PT Contoh Air"><span class="err"></span></label>
+            </div>
+          </fieldset>
+
+          <fieldset data-step="3" hidden>
+            <legend>Jenis medex</legend>
+            <div class="lbl">Kelas sertifikat</div>
+            <div class="opts" id="clsOpts">
+              <label class="opt"><input type="radio" name="mcls" id="m1" value="Class 1"><span>Class 1<small class="rec" data-rec="1"></small></span></label>
+              <label class="opt"><input type="radio" name="mcls" id="m2" value="Class 2"><span>Class 2<small class="rec" data-rec="2"></small></span></label>
+              <label class="opt"><input type="radio" name="mcls" id="m3" value="Class 3"><span>Class 3<small class="rec" data-rec="3"></small></span></label>
+            </div>
+            <span class="err" id="clsErr"></span>
+            <div class="lbl">Jenis pemeriksaan</div>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="mtype" id="t1" value="Initial"><span>Initial<small>Pertama kali</small></span></label>
+              <label class="opt"><input type="radio" name="mtype" id="t2" value="Renewal"><span>Renewal<small>Perpanjangan</small></span></label>
+              <label class="opt"><input type="radio" name="mtype" id="t3" value="Special"><span>Special<small>Pasca sakit / cedera</small></span></label>
+            </div>
+            <span class="err" id="typeErr"></span>
+          </fieldset>
+
+          <fieldset data-step="4" hidden>
+            <legend>Jadwal</legend>
+            <div class="lbl">Tanggal (hari kerja)</div>
+            <div class="dates" id="dates"></div>
+            <span class="err" id="dateErr"></span>
+            <div class="lbl">Sesi</div>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="sesi" id="s1" value="Pagi · 07.30"><span>Pagi<small class="mono">07.30 · disarankan untuk puasa</small></span></label>
+              <label class="opt"><input type="radio" name="sesi" id="s2" value="Siang · 10.00"><span>Siang<small class="mono">10.00</small></span></label>
+            </div>
+            <span class="err" id="sesiErr"></span>
+          </fieldset>
+
+          <fieldset data-step="5" hidden>
+            <legend>Konfirmasi</legend>
+            <dl class="summary" id="summary"></dl>
+            <label class="check"><input type="checkbox" id="agree"> Data di atas benar dan saya sudah membaca checklist persiapan.</label>
+            <span class="err" id="agreeErr"></span>
+          </fieldset>
+
+          <div class="success" id="success" hidden>
+            <svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring" cx="50" cy="50" r="45"/><path class="tick" d="M30 52 L44 65 L71 37"/></svg>
+            <h3 style="font-size:32px">Pendaftaran tercatat</h3>
+            <p class="muted" id="successText"></p>
+            <div class="regno" id="regNo">—</div>
+            <p class="demo-note">Halaman demo: data tidak dikirim ke server mana pun.</p>
+            <button type="button" class="btn" id="again">Daftarkan orang lain</button>
+          </div>
+
+          <div class="reg-nav" id="regNav">
+            <button type="button" class="btn" id="prevBtn" hidden>Kembali</button>
+            <button type="submit" class="btn btn-primary" id="nextBtn" style="margin-left:auto">Lanjut</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATUS -->
+  <section id="status" style="background:var(--surface);border-block:1px solid var(--line)">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">Cek Status</span>
+        <h2>Lacak sertifikat Anda</h2>
+        <p>Masukkan nomor registrasi dari email konfirmasi. Status diperbarui setiap kali satu tahap selesai.</p>
+      </div>
+      <div class="status-wrap">
+        <form class="status-form rv" id="statusForm" novalidate>
+          <label class="lbl" for="regInput">Nomor registrasi</label>
+          <div class="row">
+            <input id="regInput" type="text" placeholder="LS-241105-0187" autocomplete="off">
+            <button class="btn btn-primary" type="submit">Cek</button>
+          </div>
+          <span class="err" id="statusErr"></span>
+          <div style="display:grid;gap:8px">
+            <span class="eyebrow" style="color:var(--muted)">Coba nomor contoh</span>
+            <div class="samples">
+              <button type="button" class="chip" data-no="LS-241105-0187">LS-241105-0187</button>
+              <button type="button" class="chip" data-no="LS-241105-0203">LS-241105-0203</button>
+              <button type="button" class="chip" data-no="LS-241104-0231">LS-241104-0231</button>
+              <button type="button" class="chip" data-no="LS-241101-0255">LS-241101-0255</button>
+            </div>
+          </div>
+        </form>
+        <div id="statusOut" aria-live="polite">
+          <div class="empty"><b style="color:var(--ink)">Belum ada nomor yang dicek</b><span>Hasil berisi status, kelas, dan tahap pemeriksaan.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">FAQ</span>
+        <h2>Pertanyaan yang sering muncul</h2>
+      </div>
+      <div class="faq" id="faqList">
+        <div class="qa rv"><button aria-expanded="false">Berapa lama pemeriksaan berlangsung?<span class="pm"></span></button><div class="ans"><div><p>Pemeriksaan renewal biasanya selesai dalam satu hari kerja. Initial lebih lama karena ada EEG dan tes psikologi. Bila ada pemeriksaan lanjutan, Anda akan diminta datang kembali.</p></div></div></div>
+        <div class="qa rv"><button aria-expanded="false">Apa arti status "Fit with limitation"?<span class="pm"></span></button><div class="ans"><div><p>Anda layak terbang dengan syarat tertentu yang tertulis di sertifikat. Contoh paling umum: wajib memakai lensa korektif dan membawa kacamata cadangan saat bertugas.</p></div></div></div>
+        <div class="qa rv"><button aria-expanded="false">Saya dinyatakan Temporarily Unfit. Lalu bagaimana?<span class="pm"></span></button><div class="ans"><div><p>Artinya ada temuan yang perlu ditangani dulu. Ikuti pengobatan atau pemeriksaan lanjutan yang diminta dokter, lalu jadwalkan pemeriksaan ulang (Special) dengan membawa hasilnya.</p></div></div></div>
+        <div class="qa rv"><button aria-expanded="false">Kapan sebaiknya mendaftar renewal?<span class="pm"></span></button><div class="ans"><div><p>Daftarkan 2–4 minggu sebelum sertifikat habis. Ini memberi waktu bila ada pemeriksaan tambahan, tanpa membuat Anda kehilangan jadwal terbang.</p></div></div></div>
+        <div class="qa rv"><button aria-expanded="false">Apakah saya boleh minum obat rutin sebelum diperiksa?<span class="pm"></span></button><div class="ans"><div><p>Obat rutin tetap diminum seperti biasa, kecuali dokter Anda berkata lain. Bawa daftar obatnya dan sampaikan ke dokter pemeriksa. Beberapa obat memengaruhi kelayakan terbang.</p></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="kontak" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">Kontak</span>
+        <h2>Datang langsung atau hubungi kami</h2>
+      </div>
+      <div class="contact">
+        <div class="ccard rv"><span class="eyebrow">Alamat</span><b>Gedung Medis Penerbangan, Lt. 2</b><span class="muted">Kawasan Bandara, Tangerang, Banten (alamat contoh)</span></div>
+        <div class="ccard rv"><span class="eyebrow">Jam layanan</span><b class="mono">Senin–Jumat · 07.30–15.00</b><span class="muted">Pendaftaran pemeriksaan ditutup pukul 11.00.</span></div>
+        <div class="ccard rv"><span class="eyebrow">Telepon / WhatsApp</span><b class="mono" id="phone">(021) 555-0142</b><button class="copy" type="button" data-copy="(021) 555-0142">Salin nomor</button></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="top">
+      <span class="brand" style="font-size:18px"><span class="brand-mark" style="width:28px;height:28px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13h4l2-5 3 10 3-8 2 3h6"/></svg></span>Langit Sehat</span>
+      <span class="mono">Acuan: CASR Part 67 · ICAO Annex 1</span>
+    </div>
+    <p class="disclaimer">Situs contoh untuk klinik fiktif. Bukan situs resmi Balai Kesehatan Penerbangan atau Kementerian Perhubungan. Daftar pemeriksaan dan masa berlaku bersifat umum; ketentuan resmi bisa berbeda.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function(s,r){return (r||document).querySelector(s)};
+  var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+  var fmt = function(d){return d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})};
+  var addMonths = function(d,m){var x=new Date(d);var day=x.getDate();x.setDate(1);x.setMonth(x.getMonth()+m);var last=new Date(x.getFullYear(),x.getMonth()+1,0).getDate();x.setDate(Math.min(day,last));return x};
+  var today = new Date(); today.setHours(0,0,0,0);
+
+  /* nav */
+  var nav=$('#nav'), burger=$('#burger'), menu=$('#menu');
+  var onScroll=function(){nav.classList.toggle('scrolled',scrollY>10)};
+  onScroll(); addEventListener('scroll',onScroll,{passive:true});
+  burger.addEventListener('click',function(){var o=menu.classList.toggle('open');burger.setAttribute('aria-expanded',o)});
+  $$('#menu a').forEach(function(a){a.addEventListener('click',function(){menu.classList.remove('open');burger.setAttribute('aria-expanded','false')})});
+
+  /* hero cert dates */
+  $('#certIssued').textContent = fmt(today).toUpperCase();
+  $('#certValid').textContent = fmt(addMonths(today,12)).toUpperCase();
+
+  /* ECG */
+  (function(){
+    var w=600,h=64,mid=40,beats=4,s=w/beats,d='M0 '+mid;
+    var pts=[[.16,0],[.2,-4],[.24,0],[.34,0],[.37,5],[.41,-34],[.45,12],[.48,0],[.6,0],[.67,-8],[.74,0],[1,0]];
+    for(var b=0;b<beats;b++){pts.forEach(function(p){d+=' L'+(b*s+p[0]*s).toFixed(1)+' '+(mid+p[1])})}
+    $('#ecgPath').setAttribute('d',d);
+    var g='';for(var x=0;x<=w;x+=30)g+='<line x1="'+x+'" y1="0" x2="'+x+'" y2="'+h+'"/>';for(var y=4;y<=h;y+=15)g+='<line x1="0" y1="'+y+'" x2="'+w+'" y2="'+y+'"/>';
+    $('#ecgGrid').innerHTML=g;
+    var bpmEl=$('#bpm');
+    if(!reduced) setInterval(function(){bpmEl.textContent=70+Math.round(Math.random()*5)},1600);
+  })();
+  if(reduced){var fp=$('#flightpath'); if(fp.pauseAnimations) fp.pauseAnimations();}
+
+  /* parallax clouds */
+  var clouds=$$('[data-par]');
+  if(!reduced) addEventListener('scroll',function(){var y=scrollY;if(y>900)return;clouds.forEach(function(c){c.style.transform='translate3d(0,'+(y*parseFloat(c.dataset.par))+'px,0)'})},{passive:true});
+
+  /* reveal + count-up (content stays visible; it only glides in) */
+  var countUp=function(el){var end=parseInt(el.dataset.count,10),t0=null;var step=function(t){if(!t0)t0=t;var p=Math.min(1,(t-t0)/1100);el.textContent=Math.round(end*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)};
+  if('IntersectionObserver' in window && !reduced){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;var t=e.target;t.classList.remove('pre');t.classList.add('in');$$('[data-count]',t).forEach(countUp);io.unobserve(t)})},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+    var vh=innerHeight;
+    $$('.rv').forEach(function(el,i){
+      var r=el.getBoundingClientRect();
+      if(r.top>vh){el.classList.add('pre');var sib=el.parentElement?Array.prototype.indexOf.call(el.parentElement.children,el):0;el.style.transitionDelay=(Math.min(sib,6)*70)+'ms'}
+      else el.classList.add('in');
+      io.observe(el);
+    });
+    var flow=$('#flow');var fo=new IntersectionObserver(function(es){if(es[0].isIntersecting){flow.classList.add('in');fo.disconnect()}},{threshold:.3});fo.observe(flow);
+  } else { $$('.rv').forEach(function(el){el.classList.add('in')}); $('#flow').classList.add('in'); }
+
+  /* validity calculator */
+  var cls='1', ageIn=$('#age'), dateIn=$('#examDate'), sp=$('#singlePilot'), spWrap=$('#spWrap');
+  dateIn.value = today.toISOString().slice(0,10);
+  var calc=function(){
+    var a=parseInt(ageIn.value,10)||0, m, rule;
+    if(cls==='1'){
+      if(a>=60){m=6;rule='Class 1, usia 60 tahun ke atas di angkutan udara komersial.'}
+      else if(a>=40&&sp.checked){m=6;rule='Class 1, usia 40+ dengan operasi single-pilot penumpang komersial.'}
+      else {m=12;rule=a>=40?'Class 1, usia 40–59 tahun, operasi multi-crew.':'Class 1, usia di bawah 40 tahun.'}
+    } else {
+      var base=cls==='2'?60:48;
+      if(a>=50){m=12;rule='Class '+cls+', usia 50 tahun ke atas.'}
+      else if(a>=40){m=24;rule='Class '+cls+', usia 40–49 tahun.'}
+      else {m=base;rule='Class '+cls+', usia di bawah 40 tahun.'}
+    }
+    spWrap.hidden = cls!=='1';
+    var big=$('#vMonths'); if(big.textContent!==String(m)){big.textContent=m; if(!reduced&&big.animate) big.animate([{transform:'translateY(14px)',opacity:0},{transform:'none',opacity:1}],{duration:380,easing:'cubic-bezier(.2,.8,.2,1)'})}
+    var d=dateIn.value?new Date(dateIn.value+'T00:00:00'):today;
+    $('#vUntil').textContent=fmt(addMonths(d,m));
+    $('#vRule').textContent=rule;
+  };
+  var setCls=function(c){cls=c;$$('.seg button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.c===c)});$$('.cls').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.class===c)});calc()};
+  $$('.seg button').forEach(function(b){b.addEventListener('click',function(){setCls(b.dataset.c)})});
+  $$('.cls').forEach(function(b){b.addEventListener('click',function(){setCls(b.dataset.class);$('#calc').scrollIntoView({behavior:reduced?'auto':'smooth',block:'nearest'})})});
+  [ageIn,dateIn,sp].forEach(function(el){el.addEventListener('input',calc);el.addEventListener('change',calc)});
+  calc();
+
+  /* checklist */
+  var boxes=$$('#checklist input');
+  var upd=function(){var n=boxes.filter(function(b){return b.checked}).length;$('#prepPct').textContent=n+'/'+boxes.length;$('#prepBar').style.width=(n/boxes.length*100)+'%'};
+  boxes.forEach(function(b){b.addEventListener('change',upd)}); upd();
+
+  /* dates for registration */
+  (function(){
+    var wrap=$('#dates'),d=new Date(today),n=0,html='';
+    var dn=['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+    while(n<10){d.setDate(d.getDate()+1);var wd=d.getDay();if(wd===0||wd===6)continue;
+      var label=d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+      html+='<label class="opt"><input type="radio" name="tgl" id="d'+n+'" value="'+label+'"><span><small>'+dn[wd]+'</small><b>'+d.getDate()+'</b><small>'+d.toLocaleDateString('id-ID',{month:'short'})+'</small></span></label>';n++}
+    wrap.innerHTML=html;
+  })();
+
+  /* registration wizard */
+  var form=$('#regForm'), sets=$$('fieldset',form), step=1, total=sets.length;
+  var prev=$('#prevBtn'), next=$('#nextBtn');
+  var setErr=function(el,msg){var e=el.parentElement.querySelector('.err');if(e)e.textContent=msg||'';el.classList.toggle('invalid',!!msg)};
+  var radioVal=function(n){var r=form.querySelector('input[name="'+n+'"]:checked');return r?r.value:''};
+  var show=function(n){
+    step=n;
+    sets.forEach(function(f){f.hidden=+f.dataset.step!==n});
+    $$('#steps li').forEach(function(li,i){li.className=i+1<n?'done':(i+1===n?'on':'')});
+    $('#progBar').style.width=(n/total*100)+'%';
+    prev.hidden=n===1;
+    next.textContent=n===total?'Kirim pendaftaran':'Lanjut';
+    if(n===3){var r=form.querySelector('input[name="role"]:checked');var rc=r?r.dataset.cls:null;
+      $$('[data-rec]').forEach(function(s){s.textContent=s.dataset.rec===rc?'Disarankan':''});
+      if(rc&&!radioVal('mcls')) $('#m'+rc).checked=true;}
+    if(n===5){var rows=[['Nama',$('#fName').value],['Personel',radioVal('role')],['Instansi',$('#fOrg').value],['Medex',radioVal('mcls')+' · '+radioVal('mtype')],['Jadwal',radioVal('tgl')],['Sesi',radioVal('sesi')],['Kontak',$('#fEmail').value+' · '+$('#fPhone').value]];
+      var dl=$('#summary');dl.innerHTML='';rows.forEach(function(r){var dt=document.createElement('dt');dt.textContent=r[0];var dd=document.createElement('dd');dd.textContent=r[1]||'—';dl.appendChild(dt);dl.appendChild(dd)})}
+  };
+  var validate=function(n){
+    var ok=true, fs=sets[n-1];
+    $$('input[required],select[required]',fs).forEach(function(el){
+      var v=el.value.trim(),msg='';
+      if(!v)msg='Wajib diisi.';
+      else if(el.type==='email'&&!/^\S+@\S+\.\S+$/.test(v))msg='Format email belum benar.';
+      else if(el.type==='tel'&&v.replace(/\D/g,'').length<9)msg='Nomor terlalu pendek.';
+      else if(el.id==='fDob'){var age=(today-new Date(v))/31557600000;if(age<16||age>90)msg='Periksa kembali tanggal lahir.'}
+      setErr(el,msg); if(msg)ok=false;
+    });
+    var need={2:[['role','#roleErr','Pilih jenis personel.']],3:[['mcls','#clsErr','Pilih kelas sertifikat.'],['mtype','#typeErr','Pilih jenis pemeriksaan.']],4:[['tgl','#dateErr','Pilih tanggal.'],['sesi','#sesiErr','Pilih sesi.']]}[n]||[];
+    need.forEach(function(q){var e=$(q[1]);if(!radioVal(q[0])){e.textContent=q[2];ok=false}else e.textContent=''});
+    if(n===5){var a=$('#agree');$('#agreeErr').textContent=a.checked?'':'Centang untuk melanjutkan.';if(!a.checked)ok=false}
+    if(!ok){var first=fs.querySelector('.invalid');if(first)first.focus();
+      if(!reduced&&fs.animate)fs.animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:300})}
+    return ok;
+  };
+  form.addEventListener('input',function(e){if(e.target.classList.contains('invalid'))setErr(e.target,'')});
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    if(!validate(step))return;
+    if(step<total){show(step+1);return}
+    var d=today, no='LS-'+String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+String(Math.floor(1000+Math.random()*8999));
+    sets.forEach(function(f){f.hidden=true});$('#regNav').hidden=true;
+    $('#successText').textContent=radioVal('mcls')+' '+radioVal('mtype')+' · '+radioVal('tgl')+', sesi '+radioVal('sesi').toLowerCase()+'.';
+    $('#regNo').textContent=no;$('#success').hidden=false;
+    $$('#steps li').forEach(function(li){li.className='done'});$('#progBar').style.width='100%';
+    lastReg={no:no,name:$('#fName').value,cls:radioVal('mcls'),type:radioVal('mtype'),date:radioVal('tgl')};
+  });
+  prev.addEventListener('click',function(){if(step>1)show(step-1)});
+  $('#again').addEventListener('click',function(){form.reset();$('#success').hidden=true;$('#regNav').hidden=false;show(1)});
+  $('#fillDemo').addEventListener('click',function(){
+    $('#fName').value='Rizky Pratama (contoh)';$('#fDob').value='1990-04-12';$('#fSex').value='Laki-laki';
+    $('#fEmail').value='rizky@contoh-air.co.id';$('#fPhone').value='0812 0000 1234';
+    $('#r1').checked=true;$('#fLic').value='7731';$('#fOrg').value='PT Contoh Air';
+    $('#m1').checked=true;$('#t2').checked=true;$('#d0').checked=true;$('#s1').checked=true;
+    $$('.invalid',form).forEach(function(el){setErr(el,'')});$$('.err',form).forEach(function(e){e.textContent=''});
+  });
+  show(1);
+
+  /* status check (sample data) */
+  var lastReg=null;
+  var addD=function(n){var x=new Date(today);x.setDate(x.getDate()+n);return fmt(x)};
+  var DB={
+    'LS-241105-0187':{name:'Capt. R. Pratama',cls:'Class 1 · Renewal',badge:['b-ok','Fit'],msg:'Sertifikat terbit. Berlaku sampai '+fmt(addMonths(today,12))+'.',lim:'Tanpa limitasi',stage:4},
+    'LS-241105-0203':{name:'D. Anggraini',cls:'Class 2 · Initial',badge:['b-info','Diproses'],msg:'Hasil laboratorium dan rontgen sedang dievaluasi dokter penguji.',lim:'—',stage:2},
+    'LS-241104-0231':{name:'S. Wibowo',cls:'Class 3 · Renewal',badge:['b-warn','Fit with limitation'],msg:'Layak bertugas dengan limitasi tertulis di sertifikat.',lim:'Wajib memakai lensa korektif dan membawa kacamata cadangan',stage:4},
+    'LS-241101-0255':{name:'A. Hidayat',cls:'Class 1 · Renewal',badge:['b-bad','Temporarily unfit'],msg:'Perlu pemeriksaan lanjutan kardiologi (treadmill dan echo) sebelum penilaian ulang.',lim:'—',stage:2}
+  };
+  var stages=['Registrasi diterima','Pemeriksaan selesai','Evaluasi AME','Sertifikat terbit'];
+  var render=function(no){
+    var out=$('#statusOut'), r=DB[no];
+    if(!r&&lastReg&&lastReg.no===no) r={name:lastReg.name,cls:lastReg.cls+' · '+lastReg.type,badge:['b-info','Terjadwal'],msg:'Pemeriksaan dijadwalkan '+lastReg.date+'.',lim:'—',stage:0};
+    if(!r){$('#statusErr').textContent='Nomor tidak ditemukan. Periksa kembali format LS-YYMMDD-XXXX.';return}
+    $('#statusErr').textContent='';
+    var times=[addD(-3)+' · 08.10',addD(-2)+' · 13.40',r.stage>=3?addD(-1)+' · 10.20':'',r.stage>=4?addD(0)+' · 09.00':''];
+    var li=stages.map(function(s,i){var cl=i<r.stage||(r.stage===4)?'done':(i===r.stage?'now':'');if(r.stage===4)cl='done';
+      return '<li class="'+cl+'"><span class="d"></span><span>'+s+(cl==='done'&&times[i]?'<small>'+times[i]+'</small>':cl==='now'?'<small>Sedang berjalan</small>':'')+'</span></li>'}).join('');
+    out.innerHTML='<div class="result"><div class="result-head"><div><div class="mono muted" style="font-size:12.5px">'+no+'</div><h3 style="font-size:28px;margin-top:4px"></h3><div class="muted" style="font-size:14px"></div></div><span class="badge '+r.badge[0]+'"><i></i>'+r.badge[1]+'</span></div><p class="rmsg"></p><dl class="summary"><dt>Limitasi</dt><dd class="rlim"></dd></dl><ol class="track">'+li+'</ol></div>';
+    var box=out.firstChild;box.querySelector('h3').textContent=r.name;box.querySelector('.result-head .muted:not(.mono)').textContent=r.cls;box.querySelector('.rmsg').textContent=r.msg;box.querySelector('.rlim').textContent=r.lim;
+  };
+  $('#statusForm').addEventListener('submit',function(e){e.preventDefault();var v=$('#regInput').value.trim().toUpperCase();if(!v){$('#statusErr').textContent='Masukkan nomor registrasi.';return}render(v)});
+  $$('.chip').forEach(function(c){c.addEventListener('click',function(){$('#regInput').value=c.dataset.no;render(c.dataset.no)})});
+
+  /* faq */
+  $$('.qa button').forEach(function(b){b.addEventListener('click',function(){var q=b.parentElement,o=!q.classList.contains('open');q.classList.toggle('open',o);b.setAttribute('aria-expanded',o)})});
+
+  /* copy */
+  $$('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
+    var t=b.dataset.copy, done=function(){b.textContent='Tersalin';setTimeout(function(){b.textContent='Salin nomor'},1600)};
+    try{navigator.clipboard.writeText(t).then(done,function(){sel()})}catch(e){sel()}
+    function sel(){var r=document.createRange();r.selectNodeContents($('#phone'));var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Tekan Ctrl+C'}
+  })});
+})();
+</script>

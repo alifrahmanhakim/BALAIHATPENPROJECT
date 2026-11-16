@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Portal Pelayanan</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <header class="topbar" id="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="#beranda">
+        <span class="logo" id="logo"></span>
+        <span class="brand-tx"><b id="namaSingkat"></b><small id="namaPanjang"></small></span>
+      </a>
+      <nav class="menu" aria-label="Menu utama">
+        <a href="#layanan">Layanan</a>
+        <a href="#pendaftaran">Pendaftaran</a>
+        <a href="#status">Cek Status</a>
+        <a href="#kontak">Kontak</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="beranda">
+      <div class="wrap hero-g">
+        <div class="hero-tx">
+          <span class="eyebrow" id="tagline"></span>
+          <h1>Pelayanan kesehatan penerbangan</h1>
+          <p class="lead">Pendaftaran medex, pemeriksaan penunjang, dan layanan skrining dalam satu portal.</p>
+          <div class="hero-cta">
+            <a class="btn btn-main" href="#pendaftaran">Daftar Medex</a>
+            <a class="btn" href="#status">Cek status</a>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <svg viewBox="0 0 400 300">
+            <circle class="ring r1" cx="200" cy="150" r="110"/>
+            <circle class="ring r2" cx="200" cy="150" r="70"/>
+            <path class="pulse" d="M20 220 H120 L140 190 L160 250 L180 120 L200 260 L220 220 H380" fill="none" stroke-width="3" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="layanan">
+      <div class="wrap">
+        <div class="sh"><span class="eyebrow">Layanan</span><h2>Daftar layanan</h2><p>Tarif di bawah adalah contoh dan harus diganti dengan tarif resmi.</p></div>
+        <div class="filters" id="filters"></div>
+        <div class="list" id="daftarLayanan"></div>
+      </div>
+    </section>
+
+    <section class="sec alt" id="pendaftaran">
+      <div class="wrap">
+        <div class="sh"><span class="eyebrow">Pendaftaran</span><h2>Daftar medex online</h2><p>Isi data berikut. Pendaftaran diproses sesuai jadwal dan ketentuan instansi.</p></div>
+        <form class="form card" id="formDaftar" novalidate>
+          <div class="grid2">
+            <label>Nama lengkap<input name="nama" required autocomplete="name"></label>
+            <label>Email<input name="email" type="email" required autocomplete="email"></label>
+            <label>No. HP / WhatsApp<input name="telp" type="tel" required autocomplete="tel"></label>
+            <label>Kelas medex
+              <select name="kelas" required>
+                <option value="">Pilih</option>
+                <option>Kelas 1</option><option>Kelas 2</option><option>Kelas 3</option>
+              </select>
+            </label>
+            <label>Jenis pemeriksaan
+              <select name="jenis" required>
+                <option value="">Pilih</option>
+                <option>Initial</option><option>Renewal</option><option>Special</option>
+              </select>
+            </label>
+            <label>Tanggal pemeriksaan<input name="tanggal" type="date" required></label>
+          </div>
+          <div class="form-foot">
+            <p class="msg" id="msgDaftar" role="status"></p>
+            <button class="btn btn-main" type="submit">Kirim pendaftaran</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="sec" id="status">
+      <div class="wrap">
+        <div class="sh"><span class="eyebrow">Cek status</span><h2>Lacak status pemeriksaan</h2><p>Masukkan nomor pendaftaran dari bukti pendaftaran Anda.</p></div>
+        <form class="form card row-form" id="formStatus" novalidate>
+          <input name="no" placeholder="Nomor pendaftaran" required aria-label="Nomor pendaftaran">
+          <button class="btn btn-main" type="submit">Cek</button>
+        </form>
+        <p class="msg" id="msgStatus" role="status"></p>
+      </div>
+    </section>
+
+    <section class="sec alt" id="kontak">
+      <div class="wrap grid3">
+        <div class="card"><span class="eyebrow">Alamat</span><b id="alamat"></b></div>
+        <div class="card"><span class="eyebrow">Jam pelayanan</span><b id="jam"></b></div>
+        <div class="card"><span class="eyebrow">Kontak</span><b id="telepon"></b><b id="email"></b></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <span id="footNama"></span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
